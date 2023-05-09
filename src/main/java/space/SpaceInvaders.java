@@ -27,14 +27,6 @@ public class SpaceInvaders extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(() -> {
-
-			var ex = new SpaceInvaders();
-			ex.setVisible(true);
-		});
-	}
 
 	public static void showControllerPlaying(GameController controller, long seed) {
 		EventQueue.invokeLater(() -> {

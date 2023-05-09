@@ -3,6 +3,7 @@ package space;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -81,7 +82,7 @@ public class Board extends JPanel {
 		for (int i = 0; i < Commons.NUMBER_OF_LINES; i++) {
 			for (int j = 0; j < Commons.NUMBER_OF_ALIENS_TO_DESTROY / Commons.NUMBER_OF_LINES; j++) {
 
-				var alien = new Alien(Commons.ALIEN_INIT_X + 18 * j, Commons.ALIEN_INIT_Y + 18 * i);
+				Alien alien = new Alien(Commons.ALIEN_INIT_X + 18 * j, Commons.ALIEN_INIT_Y + 18 * i);
 				aliens.add(alien);
 			}
 		}
@@ -185,8 +186,8 @@ public class Board extends JPanel {
 		g.setColor(Color.white);
 		g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
 
-		var small = new Font("Helvetica", Font.BOLD, 14);
-		var fontMetrics = this.getFontMetrics(small);
+		Font small = new Font("Helvetica", Font.BOLD, 14);
+		FontMetrics fontMetrics = this.getFontMetrics(small);
 
 		g.setColor(Color.white);
 		g.setFont(small);
@@ -269,7 +270,7 @@ public class Board extends JPanel {
 					if (shotX >= (alienX) && shotX <= (alienX + Commons.ALIEN_WIDTH) && shotY >= (alienY)
 							&& shotY <= (alienY + Commons.ALIEN_HEIGHT)) {
 
-						var ii = new ImageIcon(explImg);
+						ImageIcon ii = new ImageIcon(explImg);
 						alien.setImage(ii.getImage());
 						alien.setDying(true);
 						deaths++;

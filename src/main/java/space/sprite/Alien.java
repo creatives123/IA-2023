@@ -18,8 +18,8 @@ public class Alien extends Sprite {
 
         bomb = new Bomb(x, y);
 
-        var alienImg = "src/images/alien.png";
-        var ii = new ImageIcon(alienImg);
+        String alienImg = "src/images/alien.png";
+        ImageIcon ii = new ImageIcon(alienImg);
 
         setImage(ii.getImage());
     }
@@ -50,8 +50,8 @@ public class Alien extends Sprite {
             this.x = x;
             this.y = y;
 
-            var bombImg = "src/images/bomb.png";
-            var ii = new ImageIcon(bombImg);
+            String bombImg = "src/images/bomb.png";
+            ImageIcon ii = new ImageIcon(bombImg);
             setImage(ii.getImage());
         }
 
