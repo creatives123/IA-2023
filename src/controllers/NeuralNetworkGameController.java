@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.Random;
+
 import nn.FeedForwardNeuralNetwork;
 import space.Commons;
 
 public class NeuralNetworkGameController implements GameController {
 
     private FeedForwardNeuralNetwork neuralNetwork;
+    private double fitness;
 
     public NeuralNetworkGameController(int inputDim, int hiddenDim, int outputDim) {
         neuralNetwork = new FeedForwardNeuralNetwork(inputDim, hiddenDim, outputDim);
@@ -42,4 +45,28 @@ public class NeuralNetworkGameController implements GameController {
     public void setChromossome(double[] chromossome) {
         neuralNetwork = new FeedForwardNeuralNetwork(neuralNetwork.inputDim, neuralNetwork.hiddenDim, neuralNetwork.outputDim, chromossome);
     }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("NeuralNetworkGameController\n");
+        sb.append("Fitness: ").append(fitness).append("\n");
+        sb.append("Chromosome: ");
+        double[] chromosome = neuralNetwork.getChromossome();
+        for (double gene : chromosome) {
+            sb.append(gene).append(" ");
+        }
+        sb.append("\n");
+        return sb.toString();
+}
+
+
 }
