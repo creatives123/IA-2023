@@ -28,7 +28,7 @@ public class GeneticAlgorithm {
         for (NeuralNetworkGameController controller : population) {
             double fitness = evaluateFitness(controller);
             controller.setFitness(fitness);
-            System.out.println("Generation: " + (i + 1));
+            System.out.println("Generation: " + (++i));
             System.out.println("Best Fitness: " + controller.getFitness());
             System.out.println("------------");
         }
@@ -108,6 +108,7 @@ public class GeneticAlgorithm {
         child.setChromossome(chromosome);
     }
 
+    //Single-Point Crossover
     private NeuralNetworkGameController crossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2) {
         // Perform single-point crossover to create a new child individual
         double[] chromossome1 = parent1.getChromossome();
@@ -120,6 +121,31 @@ public class GeneticAlgorithm {
         for (int i = crossoverPoint; i < chromossome1.length; i++) {
             childChromossome[i] = chromossome2[i];
         }
+        NeuralNetworkGameController child = new NeuralNetworkGameController();
+        child.setChromossome(childChromossome);
+        return child;
+    }
+
+    //Two-Point Crossover
+    private NeuralNetworkGameController twoPointCrossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2) {
+        double[] chromossome1 = parent1.getChromossome();
+        double[] chromossome2 = parent2.getChromossome();
+        int chromossomeLength = chromossome1.length;
+    
+        int crossoverPoint1 = random.nextInt(chromossomeLength);
+        int crossoverPoint2 = random.nextInt(chromossomeLength);
+        int startPoint = Math.min(crossoverPoint1, crossoverPoint2);
+        int endPoint = Math.max(crossoverPoint1, crossoverPoint2);
+    
+        double[] childChromossome = new double[chromossomeLength];
+        for (int i = 0; i < chromossomeLength; i++) {
+            if (i < startPoint || i > endPoint) {
+                childChromossome[i] = chromossome1[i];
+            } else {
+                childChromossome[i] = chromossome2[i];
+            }
+        }
+    
         NeuralNetworkGameController child = new NeuralNetworkGameController();
         child.setChromossome(childChromossome);
         return child;
