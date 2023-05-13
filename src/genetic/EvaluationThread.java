@@ -3,15 +3,19 @@ package genetic;
 import controllers.NeuralNetworkGameController;
 import space.Board;
 
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+
 
 public class EvaluationThread extends Thread {
     private NeuralNetworkGameController controller;
     private CountDownLatch latch;
+    private final int seed;
 
-    public EvaluationThread(NeuralNetworkGameController controller, CountDownLatch latch) {
+    public EvaluationThread(NeuralNetworkGameController controller, CountDownLatch latch, int seed) {
         this.controller = controller;
         this.latch = latch;
+        this.seed = seed;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class EvaluationThread extends Thread {
         Board board = new Board(controller);
 
         // Run the board
-        board.setSeed(5);
+        board.setSeed(seed);
         board.run();
 
         // Return the fitness score achieved by the controller

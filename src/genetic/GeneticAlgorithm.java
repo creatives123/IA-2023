@@ -41,8 +41,9 @@ public class GeneticAlgorithm {
     public void playGame() {
         CountDownLatch latch = new CountDownLatch(populationSize);
 
+
         for (NeuralNetworkGameController controller : population) {
-            EvaluationThread evaluationThread = new EvaluationThread(controller, latch);
+            EvaluationThread evaluationThread = new EvaluationThread(controller, latch, Commons.SEED);
             evaluationThread.start();
         }
     

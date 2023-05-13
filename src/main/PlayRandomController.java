@@ -1,13 +1,17 @@
 package main;
 
+import java.util.Random;
+
 import controllers.NeuralNetworkGameController;
 import genetic.GeneticAlgorithm;
 import space.Commons;
 import space.SpaceInvaders;
 
 public class PlayRandomController {
+    private static Random random = new Random();
     public static void main(String[] args) {
         int populationSize = Commons.POPSIZE;
+        
   
 
         // Create a GeneticAlgorithm instance with the specified population size
