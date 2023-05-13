@@ -23,6 +23,19 @@ public class GeneticAlgorithm {
     }
 
     public void evolve() {
+        playGame();
+
+        //Print the Best Fitness of a give Population
+        printBestFitness(population);
+
+        // Generate a new population through crossover and mutation
+        List<NeuralNetworkGameController> newPopulation = generatePopulation(population);
+    
+        // Replace the current population with the new population
+        this.population = newPopulation;
+    }
+
+    public void playGame() {
         CountDownLatch latch = new CountDownLatch(populationSize);
 
         for (NeuralNetworkGameController controller : population) {
@@ -36,15 +49,6 @@ public class GeneticAlgorithm {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        //Print the Best Fitness of a give Population
-        printBestFitness(population);
-
-        // Generate a new population through crossover and mutation
-        List<NeuralNetworkGameController> newPopulation = generatePopulation(population);
-    
-        // Replace the current population with the new population
-        this.population = newPopulation;
     }
     
     public void printBestFitness(List<NeuralNetworkGameController> population) {
@@ -57,6 +61,7 @@ public class GeneticAlgorithm {
         }
         System.out.println("Best Fitness: " + bestFitness);
     }
+    
 
     private List<NeuralNetworkGameController> generatePopulation(List<NeuralNetworkGameController> selectedIndividuals) {
         List<NeuralNetworkGameController> newPopulation = new ArrayList<>();
@@ -110,7 +115,7 @@ public class GeneticAlgorithm {
     
     public void mutate(NeuralNetworkGameController child) {
         double mutationRate = 0.1; // Mutation rate
-        double mutationRange = 0.1; // Range for the random value
+        double mutationRange = 0.05; // Range for the random value
     
         double[] chromosome = child.getChromossome();
         for (int i = 0; i < chromosome.length; i++) {

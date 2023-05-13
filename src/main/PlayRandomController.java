@@ -4,24 +4,13 @@ import controllers.NeuralNetworkGameController;
 import genetic.GeneticAlgorithm;
 import space.SpaceInvaders;
 
-// public class PlayRandomController {
-// 	public static void main(String[] args) {
-// 		GameController c = new NeuralNetworkGameController();
-// 		SpaceInvaders.hiddenControllerPlaying(c,5);
-// 	}
-// }
-
-
 public class PlayRandomController {
     public static void main(String[] args) {
-        int populationSize = 50;
+        int populationSize = 100;
   
 
         // Create a GeneticAlgorithm instance with the specified population size
         GeneticAlgorithm ga = new GeneticAlgorithm(populationSize);
-
-        // Create a thread pool with the specified number of threads
-
 
         // Evolve the population for a certain number of generations using multiple threads
         int numGenerations = 100;
@@ -29,6 +18,7 @@ public class PlayRandomController {
                 ga.evolve();
         }
 
+        ga.playGame();
 
         // Retrieve the best individual from the final population
         NeuralNetworkGameController bestIndividual = ga.getBestIndividual();
