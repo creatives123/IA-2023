@@ -207,7 +207,7 @@ public class Board extends JPanel {
 	}
 
 	private double[] createState() {
-		double[] state = new double[aliens.size() * 3 * 2 + 1 + 3];
+		double[] state = new double[Commons.STATE_SIZE];
 		int index = 0;
 		for (Alien a : aliens) {
 			state[index++] = (a.getX() * 1.0) / Commons.BOARD_WIDTH;
@@ -219,6 +219,10 @@ public class Board extends JPanel {
 			if (!a.getBomb().isDestroyed()) {
 				state[index++] = (a.getBomb().getX() * 1.0) / Commons.BOARD_WIDTH;
 				state[index++] = (a.getBomb().getY() * 1.0) / Commons.BOARD_HEIGHT;
+			} else {
+				state[index++] = 0;
+				state[index++] = 0;
+				
 			}
 		}
 		state[index++] = (player.getX() * 1.0) / Commons.BOARD_WIDTH;
@@ -232,6 +236,7 @@ public class Board extends JPanel {
 	}
 
 	private void update() {
+
 		time++;
 		if (deaths == Commons.NUMBER_OF_ALIENS_TO_DESTROY) {
 
@@ -270,7 +275,7 @@ public class Board extends JPanel {
 					if (shotX >= (alienX) && shotX <= (alienX + Commons.ALIEN_WIDTH) && shotY >= (alienY)
 							&& shotY <= (alienY + Commons.ALIEN_HEIGHT)) {
 
-						ImageIcon ii = new ImageIcon(explImg);
+						var ii = new ImageIcon(explImg);
 						alien.setImage(ii.getImage());
 						alien.setDying(true);
 						deaths++;
@@ -292,37 +297,39 @@ public class Board extends JPanel {
 		// aliens
 
 		for (Alien alien : aliens) {
+			if (alien.isVisible()) {
 
-			int x = alien.getX();
+				int x = alien.getX();
 
-			if (x >= Commons.BOARD_WIDTH - Commons.BORDER_RIGHT && direction != -1) {
+				if (x >= Commons.BOARD_WIDTH - Commons.BORDER_RIGHT && direction != -1) {
 
-				direction = -1;
+					direction = -1;
 
-				Iterator<Alien> i1 = aliens.iterator();
+					Iterator<Alien> i1 = aliens.iterator();
 
-				while (i1.hasNext()) {
+					while (i1.hasNext()) {
 
-					Alien a2 = i1.next();
-					a2.setY(a2.getY() + Commons.GO_DOWN);
+						Alien a2 = i1.next();
+						a2.setY(a2.getY() + Commons.GO_DOWN);
+					}
 				}
-			}
 
-			if (x <= Commons.BORDER_LEFT && direction != 1) {
+				if (x <= Commons.BORDER_LEFT && direction != 1) {
 
-				direction = 1;
+					direction = 1;
 
-				Iterator<Alien> i2 = aliens.iterator();
+					Iterator<Alien> i2 = aliens.iterator();
 
-				while (i2.hasNext()) {
+					while (i2.hasNext()) {
 
-					Alien a = i2.next();
-					a.setY(a.getY() + Commons.GO_DOWN);
+						Alien a = i2.next();
+						a.setY(a.getY() + Commons.GO_DOWN);
+					}
 				}
-			}
-			if (alien.isDying()) {
+				if (alien.isDying()) {
 
-				alien.die();
+					alien.die();
+				}
 			}
 
 		}
@@ -394,6 +401,7 @@ public class Board extends JPanel {
 		}
 
 	}
+
 
 	public int getDeaths() {
 		return deaths;
