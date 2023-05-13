@@ -37,6 +37,16 @@ public class SpaceInvaders extends JFrame {
 			ex.setVisible(true);
 		});
 	}
+
+	public static void hiddenControllerPlaying(GameController controller, long seed) {
+		EventQueue.invokeLater(() -> {
+
+			var ex = new SpaceInvaders();
+			ex.setController(controller);
+			ex.setSeed(seed);
+			ex.setVisible(false);
+		});
+	}
 	
 	public void setController(GameController controller) {
 		board.setController(controller);
