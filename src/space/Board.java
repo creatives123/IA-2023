@@ -433,6 +433,7 @@ public class Board extends JPanel {
 	}
 
 	public Double getFitness() {
+		//double fitness = (double) (getDeaths() * 10000 - getTime()*4); //Beneficia o menor Tempo, deve correr com o K-Point Crossover
 		double fitness = (double) (getDeaths() * 10000 + getTime());
 		// System.out.println(fitness);
 		return fitness;
