@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import controllers.NeuralNetworkGameController;
+import genetic.Mutation.ScrambleMutation;
+
 import java.util.concurrent.CountDownLatch;
 
 public class GeneticAlgorithm {
@@ -75,6 +77,14 @@ public class GeneticAlgorithm {
             // Perform crossover to create a new child individual
             NeuralNetworkGameController child = crossover(parent1, parent2);
     
+
+            // Create an instance of ScrambleMutation with the desired mutation rate and scramble size
+            //ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2);
+
+            // Apply mutation to the child individual
+            //scrambleMutation.mutate(child);
+
+
             // Apply mutation to the child individual
             mutate(child);
     
@@ -86,7 +96,7 @@ public class GeneticAlgorithm {
     }
     
     private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
-        int tournamentSize = 20; // Number of individuals participating in each tournament
+        int tournamentSize = 30; // Number of individuals participating in each tournament
         int numTournaments = 10; // Number of tournaments to be conducted
     
         NeuralNetworkGameController bestIndividual = null;
