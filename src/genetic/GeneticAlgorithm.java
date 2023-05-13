@@ -96,7 +96,7 @@ public class GeneticAlgorithm {
     }
     
     private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
-        int tournamentSize = 30; // Number of individuals participating in each tournament
+        int tournamentSize = 20; // Number of individuals participating in each tournament
         int numTournaments = 10; // Number of tournaments to be conducted
     
         NeuralNetworkGameController bestIndividual = null;
@@ -124,8 +124,8 @@ public class GeneticAlgorithm {
     }
     
     public void mutate(NeuralNetworkGameController child) {
-        double mutationRate = 0.1; // Mutation rate
-        double mutationRange = 0.05; // Range for the random value
+        double mutationRate = 0.9; // Mutation rate
+        double mutationRange = 0.06; // Range for the random value
     
         double[] chromosome = child.getChromossome();
         for (int i = 0; i < chromosome.length; i++) {
