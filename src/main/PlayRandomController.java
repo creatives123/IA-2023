@@ -1,11 +1,6 @@
 package main;
 
-import java.util.List;
-import java.util.Random;
-
-import controllers.GameController;
 import controllers.NeuralNetworkGameController;
-import controllers.RandomController;
 import genetic.GeneticAlgorithm;
 import space.SpaceInvaders;
 
@@ -16,30 +11,35 @@ import space.SpaceInvaders;
 // 	}
 // }
 
+
 public class PlayRandomController {
     public static void main(String[] args) {
-        int populationSize = 10;
+        int populationSize = 50;
+  
 
         // Create a GeneticAlgorithm instance with the specified population size
         GeneticAlgorithm ga = new GeneticAlgorithm(populationSize);
 
-        // Evolve the population for a certain number of generations
+        // Create a thread pool with the specified number of threads
+
+
+        // Evolve the population for a certain number of generations using multiple threads
         int numGenerations = 100;
         for (int i = 0; i < numGenerations; i++) {
-            ga.evolve();
+                ga.evolve();
         }
+
 
         // Retrieve the best individual from the final population
         NeuralNetworkGameController bestIndividual = ga.getBestIndividual();
 
-        // Evaluate the fitness of the best individual
-        double bestFitness = ga.evaluateFitness(bestIndividual);
-        System.out.println("Best Individual Fitness: " + bestFitness);
+        System.out.println("Best Individual Fitness: " + bestIndividual.getFitness());
 
         // Play the game with the best individual
         SpaceInvaders.showControllerPlaying(bestIndividual, 5);
     }
 }
+
 
 
 

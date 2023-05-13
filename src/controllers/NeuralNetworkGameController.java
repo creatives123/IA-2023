@@ -54,19 +54,4 @@ public class NeuralNetworkGameController implements GameController {
         this.fitness = fitness;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("NeuralNetworkGameController\n");
-        sb.append("Fitness: ").append(fitness).append("\n");
-        sb.append("Chromosome: ");
-        double[] chromosome = neuralNetwork.getChromossome();
-        for (double gene : chromosome) {
-            sb.append(gene).append(" ");
-        }
-        sb.append("\n");
-        return sb.toString();
-}
-
-
 }
