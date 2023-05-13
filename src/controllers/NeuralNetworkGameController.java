@@ -21,7 +21,7 @@ public class NeuralNetworkGameController implements GameController {
 
     public NeuralNetworkGameController() {
         int inputDim = Commons.STATE_SIZE;
-        int hiddenDim = 20; // You can choose the hidden layer size according to your needs.
+        int hiddenDim = Commons.HIDDENDIM; // You can choose the hidden layer size according to your needs.
         int outputDim = Commons.NUM_ACTIONS;
 
         this.neuralNetwork = new FeedForwardNeuralNetwork(inputDim, hiddenDim, outputDim);

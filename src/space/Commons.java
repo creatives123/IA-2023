@@ -26,4 +26,15 @@ public interface Commons {
     
     int STATE_SIZE = Commons.NUMBER_OF_ALIENS_TO_DESTROY * 3 * 2 + 1 + 3;
     int NUM_ACTIONS = 4; // 0 - left, 1 - right, 2 - stop, 3 - fire.
+
+    //FIT = 183842
+    //JOGO GANHO
+    int POPSIZE = 200; //200
+    int GENSIZE = 100; //100
+    int TOURNSIZE = 20; //20
+    int NUMTOURNSIZE = 10; //10
+    double MUTRANGE = 0.06; //0.06
+    double MUTRATE = 0.9; // 0.9
+    int HIDDENDIM = 20; //20
+    int SEED = 5; //5
 }

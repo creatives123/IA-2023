@@ -6,6 +6,7 @@ import java.util.Random;
 
 import controllers.NeuralNetworkGameController;
 import genetic.Mutation.ScrambleMutation;
+import space.Commons;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -96,8 +97,8 @@ public class GeneticAlgorithm {
     }
     
     private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
-        int tournamentSize = 20; // Number of individuals participating in each tournament
-        int numTournaments = 10; // Number of tournaments to be conducted
+        int tournamentSize = Commons.TOURNSIZE; // Number of individuals participating in each tournament
+        int numTournaments = Commons.NUMTOURNSIZE; // Number of tournaments to be conducted
     
         NeuralNetworkGameController bestIndividual = null;
         double bestFitness = Double.NEGATIVE_INFINITY;
@@ -124,8 +125,8 @@ public class GeneticAlgorithm {
     }
     
     public void mutate(NeuralNetworkGameController child) {
-        double mutationRate = 0.9; // Mutation rate
-        double mutationRange = 0.06; // Range for the random value
+        double mutationRate = Commons.MUTRATE; // Mutation rate
+        double mutationRange = Commons.MUTRANGE; // Range for the random value
     
         double[] chromosome = child.getChromossome();
         for (int i = 0; i < chromosome.length; i++) {
