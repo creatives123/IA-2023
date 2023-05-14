@@ -81,7 +81,7 @@ public class FeedForwardNeuralNetwork {
     public void initializeWeights() {
         // Randomly initialize weights and biases
         Random random = new Random();
-        for (int i = 0; i < inputDim; i++) {
+        /*for (int i = 0; i < inputDim; i++) {
             for (int j = 0; j < hiddenDim; j++) {
                 inputWeights[i][j] = random.nextDouble() - 0.5;
             }
@@ -94,6 +94,40 @@ public class FeedForwardNeuralNetwork {
         }
         for (int i = 0; i < outputDim; i++) {
             outputBiases[i] = random.nextDouble() - 0.5;
+        }*/
+        // Xavier/Glorot Initialization: This method of initialization is named after Xavier Glorot.
+        // The idea is to scale the weights with 1/sqrt(n), where n is the number of inputs to a neuron.
+        /*for (int i = 0; i < inputDim; i++) {
+            for (int j = 0; j < hiddenDim; j++) {
+                inputWeights[i][j] = random.nextGaussian() / Math.sqrt(inputDim);
+            }
+        }
+        for (int i = 0; i < hiddenDim; i++) {
+            hiddenBiases[i] = 0.0;  // it's common to initialize biases as zeros
+            for (int j = 0; j < outputDim; j++) {
+                outputWeights[i][j] = random.nextGaussian() / Math.sqrt(hiddenDim);
+            }
+        }
+        for (int i = 0; i < outputDim; i++) {
+            outputBiases[i] = 0.0;  // it's common to initialize biases as zeros
+        }*/
+
+        //He Initialization: This method is named after Kaiming He and is designed to work with ReLU activation units.
+        // It's similar to Xavier initialization, but it uses sqrt(2/n) as the scaling facto
+
+        for (int i = 0; i < inputDim; i++) {
+            for (int j = 0; j < hiddenDim; j++) {
+                inputWeights[i][j] = random.nextGaussian() * Math.sqrt(2.0 / inputDim);
+            }
+        }
+        for (int i = 0; i < hiddenDim; i++) {
+            hiddenBiases[i] = 0.0;  // it's common to initialize biases as zeros
+            for (int j = 0; j < outputDim; j++) {
+                outputWeights[i][j] = random.nextGaussian() * Math.sqrt(2.0 / hiddenDim);
+            }
+        }
+        for (int i = 0; i < outputDim; i++) {
+            outputBiases[i] = 0.0;  // it's common to initialize biases as zeros
         }
     }
 
