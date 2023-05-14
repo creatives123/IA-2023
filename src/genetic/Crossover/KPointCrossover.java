@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import controllers.NeuralNetworkGameController;
+import space.Commons;
 
 public class KPointCrossover {
     private NeuralNetworkGameController parent1;
@@ -18,15 +19,14 @@ public class KPointCrossover {
     }
 
     public NeuralNetworkGameController crossover() {
-        int k = 4; // Number of crossover points
-    
+   
         double[] chromosome1 = parent1.getChromossome();
         double[] chromosome2 = parent2.getChromossome();
         int chromosomeLength = chromosome1.length;
     
         // Generate k random crossover points
         List<Integer> crossoverPoints = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < Commons.CROSSOVERNUMBER; i++) {
             int crossoverPoint = random.nextInt(chromosomeLength + 1);
             crossoverPoints.add(crossoverPoint);
         }

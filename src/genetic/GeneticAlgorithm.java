@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import controllers.NeuralNetworkGameController;
 import genetic.Crossover.KPointCrossover;
@@ -26,12 +25,11 @@ import java.util.concurrent.CountDownLatch;
 public class GeneticAlgorithm {
     private int populationSize;
     private List<NeuralNetworkGameController> population;
-    private Random random;
     private int generation = 1;
+    private final int numParents = 2;
 
     public GeneticAlgorithm(int populationSize) {
         this.populationSize = populationSize;
-        this.random = new Random();
         this.population = new ArrayList<>();
         for (int i = 0; i < populationSize; i++) {
             NeuralNetworkGameController controller = new NeuralNetworkGameController();
@@ -145,11 +143,11 @@ public class GeneticAlgorithm {
 
         if(Commons.SELECTIONTYPE.equals("TOURNAMENT")){
             TournamentSelection tournamentSelection = new TournamentSelection(selectedIndividual);
-            return tournamentSelection.selection(2);
+            return tournamentSelection.selection(numParents);
         }
         else if(Commons.SELECTIONTYPE.equals("SUS")){
             StochasticUniversalSampling stochasticUniversalSampling = new StochasticUniversalSampling(selectedIndividual);
-            return stochasticUniversalSampling.selection(2);
+            return stochasticUniversalSampling.selection(numParents);
         }
         return Collections.emptyList();
     }
@@ -180,7 +178,7 @@ public class GeneticAlgorithm {
             return gaussianMutation.mutate();
         }
         else if (Commons.MUTATIONTYPE.equals("SCRAMBLE")){
-            ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2, child);
+            ScrambleMutation scrambleMutation = new ScrambleMutation(Commons.SCRAMBLERATE, Commons.SCRAMBLESIZE, child);
             return scrambleMutation.mutate();
         }
         return null;

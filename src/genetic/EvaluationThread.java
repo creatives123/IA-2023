@@ -3,10 +3,7 @@ package genetic;
 import controllers.NeuralNetworkGameController;
 import space.Board;
 
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-
-
 public class EvaluationThread extends Thread {
     private NeuralNetworkGameController controller;
     private CountDownLatch latch;
