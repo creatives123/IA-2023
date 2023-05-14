@@ -1,12 +1,13 @@
 package genetic;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import controllers.NeuralNetworkGameController;
-import genetic.Mutation.ScrambleMutation;
+import genetic.Crossover.KPointCrossover;
+import genetic.Crossover.OnePointCrossover;
+import genetic.Crossover.TwoPointCrossover;
 import space.Commons;
 
 import java.util.concurrent.CountDownLatch;
@@ -31,6 +32,8 @@ public class GeneticAlgorithm {
 
         //Print the Best Fitness of a give Population
         printBestFitness(population);
+        
+        normalizeFitness(population);
 
         // Generate a new population through crossover and mutation
         List<NeuralNetworkGameController> newPopulation = generatePopulation(population);
@@ -66,6 +69,25 @@ public class GeneticAlgorithm {
         }
         System.out.println("Best Fitness: " + bestFitness);
     }
+
+    private void normalizeFitness(List<NeuralNetworkGameController> population) {
+        // Find the maximum fitness value in the population
+        double maxFitness = Double.NEGATIVE_INFINITY;
+        for (NeuralNetworkGameController controller : population) {
+            double fitness = controller.getFitness();
+            if (fitness > maxFitness) {
+                maxFitness = fitness;
+            }
+        }
+    
+        // Normalize fitness values between 0 and 1
+        for (NeuralNetworkGameController controller : population) {
+            double fitness = controller.getFitness();
+            double normalizedFitness = fitness / maxFitness;
+            controller.setFitness(normalizedFitness);
+        }
+    }
+    
     
 
     private List<NeuralNetworkGameController> generatePopulation(List<NeuralNetworkGameController> selectedIndividuals) {
@@ -76,17 +98,12 @@ public class GeneticAlgorithm {
             // Choose two parents using tournament selection
             NeuralNetworkGameController parent1 = tournamentSelection(selectedIndividuals);
             NeuralNetworkGameController parent2 = tournamentSelection(selectedIndividuals);
-    
-            // Perform crossover to create a new child individual
-            NeuralNetworkGameController child = twoPointCrossover(parent1, parent2);
-    
 
-            // Create an instance of ScrambleMutation with the desired mutation rate and scramble size
+            //Scramble Mutation
             //ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2);
-
-            // Apply mutation to the child individual
             //scrambleMutation.mutate(child);
 
+            NeuralNetworkGameController child = makeCrossover(parent1, parent2);
 
             // Apply mutation to the child individual
             mutate(child);
@@ -96,6 +113,26 @@ public class GeneticAlgorithm {
         }
     
         return newPopulation;
+    }
+
+    //Choose the Crossover
+    private NeuralNetworkGameController makeCrossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2){
+        
+        if(Commons.CROSSOVERTYPE.equals("TWOPOINT")){
+            TwoPointCrossover twoPointCrossover = new TwoPointCrossover(parent1, parent2);
+            return twoPointCrossover.crossover();
+        }
+        else if(Commons.CROSSOVERTYPE.equals("KPOINT")){
+            KPointCrossover kPointCrossover = new KPointCrossover(parent1, parent2);
+            return kPointCrossover.crossover();
+        }
+        else if(Commons.CROSSOVERTYPE.equals("ONEPOINT")){
+            OnePointCrossover onePointCrossover = new OnePointCrossover(parent1, parent2);
+            return onePointCrossover.crossover();
+        }
+
+        return null;
+
     }
     
     private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
@@ -140,90 +177,6 @@ public class GeneticAlgorithm {
         child.setChromossome(chromosome);
     }
     
-    //Single-Point Crossover
-    private NeuralNetworkGameController crossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2) {
-        // Perform single-point crossover to create a new child individual
-        double[] chromossome1 = parent1.getChromossome();
-        double[] chromossome2 = parent2.getChromossome();
-        int crossoverPoint = random.nextInt(chromossome1.length);
-        double[] childChromossome = new double[chromossome1.length];
-        for (int i = 0; i < crossoverPoint; i++) {
-            childChromossome[i] = chromossome1[i];
-        }
-        for (int i = crossoverPoint; i < chromossome1.length; i++) {
-            childChromossome[i] = chromossome2[i];
-        }
-        NeuralNetworkGameController child = new NeuralNetworkGameController();
-        child.setChromossome(childChromossome);
-        return child;
-    }
-
-    private NeuralNetworkGameController kcrossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2) {
-        int k = 4; // Number of crossover points
-    
-        double[] chromosome1 = parent1.getChromossome();
-        double[] chromosome2 = parent2.getChromossome();
-        int chromosomeLength = chromosome1.length;
-    
-        // Generate k random crossover points
-        List<Integer> crossoverPoints = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
-            int crossoverPoint = random.nextInt(chromosomeLength + 1);
-            crossoverPoints.add(crossoverPoint);
-        }
-        crossoverPoints.sort(Comparator.naturalOrder());
-    
-        // Perform k-point crossover
-        double[] childChromosome = new double[chromosomeLength];
-        int currentIndex = 0;
-        int parentIndex = 0;
-        for (int crossoverPoint : crossoverPoints) {
-            int segmentLength = crossoverPoint - currentIndex;
-            if (parentIndex % 2 == 0) {
-                System.arraycopy(chromosome1, currentIndex, childChromosome, currentIndex, segmentLength);
-            } else {
-                System.arraycopy(chromosome2, currentIndex, childChromosome, currentIndex, segmentLength);
-            }
-            currentIndex = crossoverPoint;
-            parentIndex++;
-        }
-    
-        NeuralNetworkGameController child = new NeuralNetworkGameController();
-        child.setChromossome(childChromosome);
-        return child;
-    }
-    
-
-    private NeuralNetworkGameController twoPointCrossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2) {
-        // Perform two-point crossover to create a new child individual
-        double[] chromosome1 = parent1.getChromossome();
-        double[] chromosome2 = parent2.getChromossome();
-        int length = chromosome1.length;
-    
-        // Select two random crossover points
-        int crossoverPoint1 = random.nextInt(length);
-        int crossoverPoint2 = random.nextInt(length);
-    
-        // Ensure crossover points are distinct
-        while (crossoverPoint1 == crossoverPoint2) {
-            crossoverPoint2 = random.nextInt(length);
-        }
-    
-        // Swap genetic material between parents within the crossover points
-        int startPoint = Math.min(crossoverPoint1, crossoverPoint2);
-        int endPoint = Math.max(crossoverPoint1, crossoverPoint2);
-        double[] childChromosome = new double[length];
-        System.arraycopy(chromosome1, 0, childChromosome, 0, startPoint);
-        System.arraycopy(chromosome2, startPoint, childChromosome, startPoint, endPoint - startPoint);
-        System.arraycopy(chromosome1, endPoint, childChromosome, endPoint, length - endPoint);
-    
-        NeuralNetworkGameController child = new NeuralNetworkGameController();
-        child.setChromossome(childChromosome);
-        return child;
-    }
-    
-    
-
     public double getBestFitness() {
         double bestFitness = Double.NEGATIVE_INFINITY;
         for (NeuralNetworkGameController controller : population) {
