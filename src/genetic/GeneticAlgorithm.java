@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +17,8 @@ import genetic.Crossover.OnePointCrossover;
 import genetic.Crossover.TwoPointCrossover;
 import genetic.Mutation.GaussianMutation;
 import genetic.Mutation.ScrambleMutation;
+import genetic.Selection.StochasticUniversalSampling;
+import genetic.Selection.TournamentSelection;
 import space.Commons;
 
 import java.util.concurrent.CountDownLatch;
@@ -102,10 +105,6 @@ public class GeneticAlgorithm {
         }
     }
     
-    
-    
-    
-
     private void normalizeFitness(List<NeuralNetworkGameController> population) {
         // Find the maximum fitness value in the population
         double maxFitness = Double.NEGATIVE_INFINITY;
@@ -130,17 +129,29 @@ public class GeneticAlgorithm {
         // Perform crossover and mutation on the selected individuals
         for (int i = 0; i < populationSize; i++) {
             // Choose two parents using tournament selection
-            NeuralNetworkGameController parent1 = tournamentSelection(selectedIndividuals);
-            NeuralNetworkGameController parent2 = tournamentSelection(selectedIndividuals);
+            List<NeuralNetworkGameController> parentlist = makeSelection(selectedIndividuals);
 
             // Where the Magic Happens
-            NeuralNetworkGameController child = makeCrossover(parent1, parent2);
+            NeuralNetworkGameController child = makeCrossover(parentlist.get(0), parentlist.get(1));
     
             // Add the child individual to the new population
             newPopulation.add(makeMutation(child));
         }
-    
         return newPopulation;
+    }
+
+    //Choose the Individuals
+    private List<NeuralNetworkGameController> makeSelection(List<NeuralNetworkGameController> selectedIndividual){
+
+        if(Commons.SELECTIONTYPE.equals("TOURNAMENT")){
+            TournamentSelection tournamentSelection = new TournamentSelection(selectedIndividual);
+            return tournamentSelection.selection(2);
+        }
+        else if(Commons.SELECTIONTYPE.equals("SUS")){
+            StochasticUniversalSampling stochasticUniversalSampling = new StochasticUniversalSampling(selectedIndividual);
+            return stochasticUniversalSampling.selection(2);
+        }
+        return Collections.emptyList();
     }
 
     //Choose the Crossover
@@ -158,9 +169,7 @@ public class GeneticAlgorithm {
             OnePointCrossover onePointCrossover = new OnePointCrossover(parent1, parent2);
             return onePointCrossover.crossover();
         }
-
         return null;
-
     }
 
     //Choose the Mutation
@@ -174,40 +183,9 @@ public class GeneticAlgorithm {
             ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2, child);
             return scrambleMutation.mutate();
         }
-
         return null;
     }
-
-
-    
-    private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
-        int tournamentSize = Commons.TOURNSIZE; // Number of individuals participating in each tournament
-        int numTournaments = Commons.NUMTOURNSIZE; // Number of tournaments to be conducted
-    
-        NeuralNetworkGameController bestIndividual = null;
-        double bestFitness = Double.NEGATIVE_INFINITY;
-    
-        for (int i = 0; i < numTournaments; i++) {
-            // Randomly select individuals for the tournament
-            List<NeuralNetworkGameController> tournamentParticipants = new ArrayList<>();
-            for (int j = 0; j < tournamentSize; j++) {
-                int randomIndex = random.nextInt(individuals.size());
-                tournamentParticipants.add(individuals.get(randomIndex));
-            }
-    
-            // Find the fittest individual in the tournament
-            for (NeuralNetworkGameController participant : tournamentParticipants) {
-                double fitness = participant.getFitness();
-                if (fitness > bestFitness) {
-                    bestFitness = fitness;
-                    bestIndividual = participant;
-                }
-            }
-        }
-    
-        return bestIndividual;
-    }
-        
+       
     public double getBestFitness() {
         double bestFitness = Double.NEGATIVE_INFINITY;
         for (NeuralNetworkGameController controller : population) {

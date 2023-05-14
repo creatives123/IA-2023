@@ -30,7 +30,7 @@ public interface Commons {
     //FIT = 183842
     //JOGO GANHO
     int POPSIZE = 100; //200
-    int GENSIZE = 150; //100
+    int GENSIZE = 100; //100
     int TOURNSIZE = 20; //20
     int NUMTOURNSIZE = 10; //10
     double MUTRANGE = 0.06; //0.06
@@ -39,4 +39,5 @@ public interface Commons {
     int SEED = 5; //5
     String CROSSOVERTYPE = "TWOPOINT"; //TWOPOINT //KPOINT //ONEPOINT
     String MUTATIONTYPE = "GAUSSIAN"; //GAUSSIAN //SCRAMBLE
+    String SELECTIONTYPE = "TOURNAMENT"; //TOURNAMENT //
 }
