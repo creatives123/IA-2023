@@ -448,10 +448,22 @@ public class Board extends JPanel {
     public Double getFitness() {
         double hitScore = calculateHitScore();
         double movementScore = calculateMovementScore(true);
-        // Increase the weight of deaths (hitting targets) and decrease the weight of time.
-        double fitness = (double) (getDeaths() * 20000 - getTime() * 2 + hitScore + movementScore);
+        double winBonus = 0;
+        double missedShotPenalty = (totalShots - successfulShots) * 50000;
+        double alienBonus = calculateAlienProximityPenalty();
+        double timeToKillBonus = calculateTimeToKillBonus();
+
+        // Check if the game was won
+        if (deaths == Commons.NUMBER_OF_ALIENS_TO_DESTROY) {
+            // Add a bonus proportional to the speed of the win
+            winBonus = 50000.0 / getTime();
+        }
+
+        // Increase the weight of deaths (hitting targets) and decrease the weight of time
+        double fitness = (getDeaths() * 10000 + getTime());
         return fitness;
     }
+
 
 
     public void setController(GameController controller) {
@@ -462,7 +474,7 @@ public class Board extends JPanel {
         if (totalShots == 0) {
             return 0;
         } else {
-            return 10000.0 * successfulShots / totalShots;
+            return 10000.0 * successfulShots;
         }
     }
 
@@ -471,9 +483,34 @@ public class Board extends JPanel {
     }
 
     private double calculateMovementScore(boolean punishMovement) {
-        double movementScore = totalMovement * 0.3;
+        double movementScore = totalMovement * 1;
         // If punishMovement is true, return negative score. Otherwise, return positive score.
         return punishMovement ? -movementScore : movementScore;
     }
+
+    private double calculateAlienProximityPenalty() {
+        double penalty = 0.0;
+        for (Alien alien : aliens) {
+            // Calculate how close the alien is to the ground
+            int proximityToGround = Commons.GROUND - alien.getY();
+            // Add this to the penalty. You could also square this value to give a higher penalty to aliens that are closer to the ground.
+            penalty += proximityToGround * proximityToGround;
+        }
+        // You might want to adjust this multiplication factor depending on how harsh you want the penalty to be
+        return penalty * -0.5;
+    }
+    private double calculateTimeToKillBonus() {
+        if (deaths == 0) {
+            return 0;
+        }
+
+        // Calculate the average time to kill an alien
+        double avgTimeToKill = (double) getTime() / deaths;
+        // Provide a bonus based on how fast the AI kills each alien
+        double timeToKillBonus = 1000.0 / avgTimeToKill;
+
+        return timeToKillBonus;
+    }
+
 
 }
