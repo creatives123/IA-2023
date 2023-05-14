@@ -1,5 +1,11 @@
 package genetic;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +14,8 @@ import controllers.NeuralNetworkGameController;
 import genetic.Crossover.KPointCrossover;
 import genetic.Crossover.OnePointCrossover;
 import genetic.Crossover.TwoPointCrossover;
+import genetic.Mutation.GaussianMutation;
+import genetic.Mutation.ScrambleMutation;
 import space.Commons;
 
 import java.util.concurrent.CountDownLatch;
@@ -16,6 +24,7 @@ public class GeneticAlgorithm {
     private int populationSize;
     private List<NeuralNetworkGameController> population;
     private Random random;
+    private int generation = 1;
 
     public GeneticAlgorithm(int populationSize) {
         this.populationSize = populationSize;
@@ -31,7 +40,8 @@ public class GeneticAlgorithm {
         playGame();
 
         //Print the Best Fitness of a give Population
-        printBestFitness(population);
+        printBestFitness(population, "teste", generation);
+        generation ++;
         
         normalizeFitness(population);
 
@@ -44,7 +54,6 @@ public class GeneticAlgorithm {
 
     public void playGame() {
         CountDownLatch latch = new CountDownLatch(populationSize);
-
 
         for (NeuralNetworkGameController controller : population) {
             EvaluationThread evaluationThread = new EvaluationThread(controller, latch, Commons.SEED);
@@ -59,7 +68,7 @@ public class GeneticAlgorithm {
         }
     }
     
-    public void printBestFitness(List<NeuralNetworkGameController> population) {
+    public void printBestFitness(List<NeuralNetworkGameController> population, String filename, int generation) {
         double bestFitness = Double.NEGATIVE_INFINITY;
         for (NeuralNetworkGameController controller : population) {
             double fitness = controller.getFitness();
@@ -67,8 +76,35 @@ public class GeneticAlgorithm {
                 bestFitness = fitness;
             }
         }
-        System.out.println("Best Fitness: " + bestFitness);
+        
+        // Get the current timestamp
+        LocalDateTime timestamp = LocalDateTime.now();
+        // Format the timestamp to include milliseconds
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        String formattedTimestamp = timestamp.format(formatter);
+        
+        String data = (generation) + "," + formattedTimestamp + "," + bestFitness;
+        
+        File file = new File(filename);
+        boolean fileExists = file.exists();
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            if (!fileExists) {
+                // If the file doesn't exist, write the headings
+                writer.write("Generation,Time,Fitness");
+                writer.newLine();
+            }
+            
+            writer.write(data);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    
+    
+    
+    
 
     private void normalizeFitness(List<NeuralNetworkGameController> population) {
         // Find the maximum fitness value in the population
@@ -88,8 +124,6 @@ public class GeneticAlgorithm {
         }
     }
     
-    
-
     private List<NeuralNetworkGameController> generatePopulation(List<NeuralNetworkGameController> selectedIndividuals) {
         List<NeuralNetworkGameController> newPopulation = new ArrayList<>();
     
@@ -99,17 +133,11 @@ public class GeneticAlgorithm {
             NeuralNetworkGameController parent1 = tournamentSelection(selectedIndividuals);
             NeuralNetworkGameController parent2 = tournamentSelection(selectedIndividuals);
 
-            //Scramble Mutation
-            //ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2);
-            //scrambleMutation.mutate(child);
-
+            // Where the Magic Happens
             NeuralNetworkGameController child = makeCrossover(parent1, parent2);
-
-            // Apply mutation to the child individual
-            mutate(child);
     
             // Add the child individual to the new population
-            newPopulation.add(child);
+            newPopulation.add(makeMutation(child));
         }
     
         return newPopulation;
@@ -134,6 +162,23 @@ public class GeneticAlgorithm {
         return null;
 
     }
+
+    //Choose the Mutation
+    private NeuralNetworkGameController makeMutation(NeuralNetworkGameController child){
+
+        if(Commons.MUTATIONTYPE.equals("GAUSSIAN")){
+            GaussianMutation gaussianMutation = new GaussianMutation(child);
+            return gaussianMutation.mutate();
+        }
+        else if (Commons.MUTATIONTYPE.equals("SCRAMBLE")){
+            ScrambleMutation scrambleMutation = new ScrambleMutation(1, 2, child);
+            return scrambleMutation.mutate();
+        }
+
+        return null;
+    }
+
+
     
     private NeuralNetworkGameController tournamentSelection(List<NeuralNetworkGameController> individuals) {
         int tournamentSize = Commons.TOURNSIZE; // Number of individuals participating in each tournament
@@ -162,21 +207,7 @@ public class GeneticAlgorithm {
     
         return bestIndividual;
     }
-    
-    public void mutate(NeuralNetworkGameController child) {
-        double mutationRate = Commons.MUTRATE; // Mutation rate
-        double mutationRange = Commons.MUTRANGE; // Range for the random value
-    
-        double[] chromosome = child.getChromossome();
-        for (int i = 0; i < chromosome.length; i++) {
-            if (random.nextDouble() < mutationRate) {
-                double randomValue = random.nextGaussian() * mutationRange;
-                chromosome[i] += randomValue;
-            }
-        }
-        child.setChromossome(chromosome);
-    }
-    
+        
     public double getBestFitness() {
         double bestFitness = Double.NEGATIVE_INFINITY;
         for (NeuralNetworkGameController controller : population) {

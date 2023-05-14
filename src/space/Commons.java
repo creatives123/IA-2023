@@ -38,4 +38,5 @@ public interface Commons {
     int HIDDENDIM = 20; //20
     int SEED = 5; //5
     String CROSSOVERTYPE = "TWOPOINT";
+    String MUTATIONTYPE = "GAUSSIAN"; //GAUSSIAN //SCRAMBLE
 }

@@ -6,16 +6,18 @@ import controllers.NeuralNetworkGameController;
 
 public class ScrambleMutation {
     private double mutationRate;
+    private NeuralNetworkGameController child;
     private int scrambleSize;
     private Random random;
 
-    public ScrambleMutation(double mutationRate, int scrambleSize) {
+    public ScrambleMutation(double mutationRate, int scrambleSize, NeuralNetworkGameController child) {
+        this.child = child;
         this.mutationRate = mutationRate;
         this.scrambleSize = scrambleSize;
         this.random = new Random();
     }
 
-    public void mutate(NeuralNetworkGameController child) {
+    public NeuralNetworkGameController mutate() {
         double[] chromosome = child.getChromossome();
         for (int i = 0; i < chromosome.length; i++) {
             if (random.nextDouble() < mutationRate) {
@@ -25,6 +27,7 @@ public class ScrambleMutation {
             }
         }
         child.setChromossome(chromosome);
+        return child;
     }
 
     private void scrambleGenes(double[] chromosome, int startIndex, int endIndex) {
