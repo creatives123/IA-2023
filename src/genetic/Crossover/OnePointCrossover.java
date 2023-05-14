@@ -7,7 +7,7 @@ import controllers.NeuralNetworkGameController;
 public class OnePointCrossover {
     private NeuralNetworkGameController parent1;
     private NeuralNetworkGameController parent2;
-    private Random random;
+    private Random random = new Random();
 
     public OnePointCrossover(NeuralNetworkGameController parent1, NeuralNetworkGameController parent2){
         this.parent1 = parent1;

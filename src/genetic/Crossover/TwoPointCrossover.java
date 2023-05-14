@@ -5,7 +5,7 @@ import java.util.Random;
 import controllers.NeuralNetworkGameController;
 
 public class TwoPointCrossover {
-    private Random random;
+    private Random random = new Random();
     private NeuralNetworkGameController parent1;
     private NeuralNetworkGameController parent2;
     
