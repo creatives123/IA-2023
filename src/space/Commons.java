@@ -37,6 +37,6 @@ public interface Commons {
     double MUTRATE = 0.9; // 0.9
     int HIDDENDIM = 20; //20
     int SEED = 5; //5
-    String CROSSOVERTYPE = "TWOPOINT";
+    String CROSSOVERTYPE = "TWOPOINT"; //TWOPOINT //KPOINT //ONEPOINT
     String MUTATIONTYPE = "GAUSSIAN"; //GAUSSIAN //SCRAMBLE
 }
