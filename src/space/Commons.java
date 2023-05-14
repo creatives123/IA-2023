@@ -17,8 +17,6 @@ public interface Commons {
     int ALIEN_INIT_Y = 5;
 
     int GO_DOWN = 15;
-    int NUMBER_OF_LINES = 3;//24;
-    int NUMBER_OF_ALIENS_TO_DESTROY = 18;//24;
     int CHANCE = 1;
     int DELAY = 10;
     int PLAYER_WIDTH = 15;
@@ -29,18 +27,23 @@ public interface Commons {
 
     //FIT = 183842
     //JOGO GANHO
+
+    //Variáveis
     int POPSIZE = 100; //100
     int GENSIZE = 100; //100
     int TOURNSIZE = 20; //20
     int NUMTOURNSIZE = 10; //10
-    double MUTRANGE = 0.07; //0.06
+    double MUTRANGE = 0.06; //0.06
     double MUTRATE = 0.9; // 0.9
     int HIDDENDIM = 20; //20
     int SEED = 5; //5
+    int NUMBER_OF_LINES = 3;//24;
+    int NUMBER_OF_ALIENS_TO_DESTROY = 18;//24;
+
     String CROSSOVERTYPE = "TWOPOINT"; //TWOPOINT //KPOINT //ONEPOINT
     String MUTATIONTYPE = "GAUSSIAN"; //GAUSSIAN //SCRAMBLE
     String SELECTIONTYPE = "TOURNAMENT"; //TOURNAMENT //SUS   
     int SCRAMBLERATE = 1;
-    int SCRAMBLESIZE = 2;
+    int SCRAMBLESIZE = 10;
     int CROSSOVERNUMBER = 4;
 }
