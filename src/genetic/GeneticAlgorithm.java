@@ -41,7 +41,7 @@ public class GeneticAlgorithm {
         playGame();
 
         //Print the Best Fitness of a give Population
-        printBestFitness(population, "teste", generation);
+        printBestFitness(population, "Resultados", generation);
         generation ++;
         
         normalizeFitness(population);
